@@ -4,6 +4,11 @@
   <img src="icons/logo128.png" alt="BuzzBlast Logo" width="128" height="128">
   <h3>Your AI-powered LinkedIn wingperson</h3>
   <p>Generate professional, context-aware LinkedIn comments with zero effort and maximum impact.</p>
+  <p>
+    <a href="https://github.com/hereisSwapnil/BuzzBlast">
+      <strong>GitHub Repository: hereisSwapnil/BuzzBlast</strong>
+    </a>
+  </p>
 </div>
 
 ## ✨ Features
@@ -21,8 +26,8 @@
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/yourusername/LinkedIn-Comment-Chrome-Extension.git
-   cd LinkedIn-Comment-Chrome-Extension
+   git clone https://github.com/hereisSwapnil/BuzzBlast.git
+   cd BuzzBlast
    ```
 
 2. **Install dependencies**:
@@ -48,7 +53,7 @@
 
 ### Option 2: Download ZIP
 
-1. Download the ZIP file from the repository
+1. Download the ZIP file from the [GitHub repository](https://github.com/hereisSwapnil/BuzzBlast)
 2. Extract to a folder
 3. Follow steps 3-5 from Option 1
 
