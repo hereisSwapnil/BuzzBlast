@@ -1,0 +1,45 @@
+{
+  "name": "buzzblast",
+  "version": "1.0.0",
+  "description": "Spice up your LinkedIn game with zero effort and maximum impact. AI-generated comments that slap.",
+  "main": "background.js",
+  "scripts": {
+    "build": "npm run clean && npm run create-dist && npm run build-icons && npm run copy-files && npm run validate",
+    "build:dev": "npm run clean && npm run create-dist && npm run build-icons && npm run copy-files",
+    "clean": "rimraf dist",
+    "create-dist": "mkdir -p dist",
+    "copy-files": "npm run copy-manifest && npm run copy-scripts && npm run copy-styles && npm run copy-popup && npm run copy-icons",
+    "copy-manifest": "cp manifest.json dist/",
+    "copy-scripts": "cp content.js background.js dist/",
+    "copy-styles": "cp content.css dist/",
+    "copy-popup": "cp popup.html popup.js dist/",
+    "copy-icons": "cp icons/logo*.png dist/icons/",
+    "build-icons": "npm run create-icon-dir && npm run generate-png-icons",
+    "create-icon-dir": "mkdir -p dist/icons",
+    "generate-png-icons": "node scripts/generate-icons.js",
+    "validate": "node scripts/validate-manifest.js",
+    "package": "npm run build && cd dist && zip -r ../buzzblast.zip .",
+    "dev": "npm run build:dev && echo 'Extension built in dist/ folder. Load from chrome://extensions/'",
+    "watch": "nodemon --watch . --ext js,html,css,json --ignore dist/ --exec 'npm run build:dev'"
+  },
+  "keywords": [
+    "chrome-extension",
+    "linkedin",
+    "ai",
+    "gemini",
+    "comments",
+    "productivity",
+    "buzzblast",
+    "sassy",
+    "social-media"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "rimraf": "^5.0.0",
+    "nodemon": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+} 
