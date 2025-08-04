@@ -21,9 +21,6 @@ Thumbs.db
 # VSCode
 .vscode/
 
-# Mac system files
-Icon?
-
 # Misc
 *.swp
 *.swo
