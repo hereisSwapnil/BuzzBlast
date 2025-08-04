@@ -417,81 +417,74 @@ class LinkedInCommentHelper {
   }
 
   buildPrompt(userInput, postContent, mood, commentLength) {
-    // Check if the user has provided specific instructions beyond the default placeholder.
     const hasUserInput = userInput && userInput.trim().toLowerCase() !== 'generate a comment based on the post content';
   
-    // Construct the user input section only if it's provided and meaningful.
     const userInputSection = hasUserInput 
       ? `
-  ## USER INPUT
-  Incorporate the following user-provided instruction or key point: "${userInput}"
+  Include this user instruction or point in the comment: "${userInput}"
   `
       : '';
-
-    // Define length-specific instructions
+  
     const lengthInstructions = {
-      'short': 'Keep the comment concise and to the point (1-2 lines, approximately 50-100 characters). Focus on the most impactful insight or question.',
-      'medium': 'Create a balanced comment (2-4 lines, approximately 100-200 characters). Provide context and add meaningful value.',
-      'long': 'Write a comprehensive comment (5+ lines, approximately 200+ characters). Include detailed insights, examples, or multiple points of discussion.'
+      short: 'Write a concise comment (1-2 lines, 50-100 characters). Make one sharp point or ask one good question.',
+      medium: 'Write a balanced comment (2-4 lines, around 100-200 characters). Provide thoughtful insight or ask a meaningful question.',
+      long: 'Write a detailed comment (5+ lines, 200+ characters). Share a deeper perspective, include specific examples, or raise multiple points.'
     };
-
+  
     const lengthInstruction = lengthInstructions[commentLength] || lengthInstructions.medium;
   
     const prompt = `
-  You are BuzzBlast, the sassiest LinkedIn wingperson in the game. You specialize in crafting engaging, value-driven LinkedIn comments that have personality and flair. Your goal is to help users build their professional brand by adding thoughtful contributions that stand out from the crowd.
+  You are BuzzBlast, an expert at writing engaging and insightful LinkedIn comments that stand out. Your comments are sassy, sharp, professional, and full of personality — without sounding robotic or dull.
   
-  ## TASK
-  Analyze the provided Post Content, Desired Mood, Comment Length preference, and optional User Input. Then, generate a single, high-quality LinkedIn comment that meets all the requirements.
+  Your job is to write a single comment for a LinkedIn post based on:
+  - The post content
+  - The desired mood or tone
+  - The preferred length
+  ${hasUserInput ? '- The user-provided instruction\n' : ''}
   
-  ## EXAMPLES OF EXCELLENT COMMENTS BY LENGTH
+  Always follow these instructions:
   
-  ### Short Comment Example (1-2 lines)
-  - **Post Content:** "Just launched my new open-source project, 'DataWeave'! It's a Python library for simplifying data cleaning pipelines."
-  - **Desired Mood:** Supportive
-  - **Generated Comment:** "This is fantastic! Looking forward to trying out DataWeave in my next data project. Congratulations on the launch!"
+  1. Analyze the post and identify the key theme or message.
+  2. Match the mood exactly. If the mood is "Supportive", sound warm and uplifting. If "Analytical", focus on insights and logic. Always match the emotional tone.
+  3. Respect the length guidance: ${lengthInstruction}
+  4. Do **not** use formatting like bold, bullets, emojis, or hashtags.
+  5. Avoid empty praise or generic phrases like "Great post" or "Thanks for sharing".
+  6. No more than one comment. Do not explain or summarize.
+  7. Sound like a real, thoughtful human — with flair.
   
-  ### Medium Comment Example (2-4 lines)
-  - **Post Content:** "Our new report shows a 30% increase in remote job postings for the tech sector in Q2 2025 compared to last year."
-  - **Desired Mood:** Analytical
-  - **Generated Comment:** "That's a significant jump that reflects the evolving workplace landscape. It would be interesting to see the correlation between this trend and employee retention rates. Has the data shown if companies with a remote-first policy are retaining talent more effectively?"
+  Examples (without formatting):
   
-  ### Long Comment Example (5+ lines)
-  - **Post Content:** "After 200 applications and 15 rejections in the final round, I'm thrilled to announce I've accepted a position as a Product Manager."
-  - **Desired Mood:** Inspirational
-  - **User Input:** "Mention that perseverance is key"
-  - **Generated Comment:** "What a powerful reminder of the importance of perseverance in the job search journey. Your story resonates with so many professionals who face similar challenges in today's competitive market. The fact that you persisted through 200 applications and 15 final-round rejections shows incredible resilience and determination. Your journey is truly inspiring and a testament to staying focused on the goal despite setbacks. This kind of persistence often separates successful candidates from others. Huge congratulations on the new role!"
+  SHORT:
+  Post: Just launched my new open-source project, 'DataWeave'! 
+  Mood: Supportive
+  Comment: This is fantastic. Can't wait to try DataWeave in my next project. Congrats!
   
-  ---
+  MEDIUM:
+  Post: 30% increase in remote tech jobs in Q2 2025.
+  Mood: Analytical
+  Comment: That’s a big shift. Curious if this trend is helping with long-term employee retention.
   
-  ## YOUR TASK & CONTEXT
+  LONG:
+  Post: After 200 applications, I finally landed a PM job.
+  Mood: Inspirational
+  User Input: Mention that perseverance is key
+  Comment: Your journey is proof that perseverance really pays off. 200 applications and 15 rejections is no small feat. So many people give up before they get this far. Big congrats on pushing through — it’s genuinely inspiring.
   
-  First, silently analyze the key message of the post. Second, consider the desired mood and length preference. Third, if user input exists, determine how to naturally weave it in. Finally, craft the comment according to the specified length.
+  Now write one comment that matches all the following:
   
-  ## POST CONTENT
+  Post Content:
   "${postContent}"
   
-  ## DESIRED MOOD/TONE
+  Mood:
   "${mood}"
   
-  ## COMMENT LENGTH PREFERENCE
+  Length Preference:
   ${lengthInstruction}
   ${userInputSection}
-  ## REQUIREMENTS & CONSTRAINTS
-  - **Add Value:** The comment must add value. Ask a thoughtful question, share a relevant insight, or offer a unique perspective.
-  - **Natural Tone:** Seamlessly integrate the "${mood}" mood. It should feel authentic and sassy, not forced.
-  - **Professional Sass:** Maintain a professional tone suitable for LinkedIn while adding personality and flair.
-  - **Length Compliance:** Strictly follow the specified length requirement: ${lengthInstruction}
-  - **Engaging:** Encourage a response or further discussion.
-  - **No Generic Phrases:** Do not use clichés like "Great post!", "Thanks for sharing!", or "Interesting read."
-  - **No Hashtags:** Do not include hashtags.
-  - **BuzzBlast Style:** Add personality and sass while staying professional. Make it memorable!
-  
-  Generate the LinkedIn comment now.
-  `;
+  Comment:`;
   
     return prompt.trim();
   }
-  
 
   updateButtonState(commentInput, isLoading) {
     const button = commentInput.parentElement?.querySelector('.linkedin-ai-button');
