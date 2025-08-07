@@ -59,16 +59,96 @@ class LinkedInCommentHelper {
   }
 
   findAndInjectButtons(element) {
-    // Look for LinkedIn comment input areas
+    // Look for LinkedIn comment input areas with more comprehensive selectors
     const commentInputs = element.querySelectorAll ? 
-      element.querySelectorAll('div[contenteditable="true"][data-placeholder*="comment"], div[contenteditable="true"][data-placeholder*="Comment"], div[contenteditable="true"][aria-label*="comment"], div[contenteditable="true"][aria-label*="Comment"]') :
+      element.querySelectorAll(`
+        div[contenteditable="true"][data-placeholder*="comment"],
+        div[contenteditable="true"][data-placeholder*="Comment"],
+        div[contenteditable="true"][aria-label*="comment"],
+        div[contenteditable="true"][aria-label*="Comment"],
+        div[contenteditable="true"][data-placeholder*="wish"],
+        div[contenteditable="true"][data-placeholder*="Wish"],
+        div[contenteditable="true"][data-placeholder*="good wishes"],
+        div[contenteditable="true"][aria-label*="Text editor for creating content"],
+        div.ql-editor[contenteditable="true"],
+        div[contenteditable="true"][data-test-ql-editor-contenteditable="true"],
+        div[contenteditable="true"][data-gramm="false"],
+        div.ql-editor.ql-blank[contenteditable="true"],
+        div[contenteditable="true"][aria-describedby*="text-editor-placeholder"],
+        div[contenteditable="true"][role="textbox"]
+      `) :
       [];
+
+    // Debug logging
+    if (commentInputs.length > 0) {
+      console.log('BuzzBlast: Found', commentInputs.length, 'comment inputs');
+      commentInputs.forEach((input, index) => {
+        console.log(`BuzzBlast: Input ${index + 1}:`, {
+          placeholder: input.getAttribute('data-placeholder'),
+          ariaLabel: input.getAttribute('aria-label'),
+          className: input.className,
+          dataTest: input.getAttribute('data-test-ql-editor-contenteditable')
+        });
+      });
+    }
 
     commentInputs.forEach((input) => {
       if (!input.hasAttribute('data-ai-button-injected')) {
         this.injectAIButton(input);
       }
     });
+
+    // Fallback: Look for comment boxes by their container structure
+    if (commentInputs.length === 0) {
+      const commentBoxes = element.querySelectorAll ? 
+        element.querySelectorAll('.comments-comment-box, .comments-comment-box__form, .comments-comment-texteditor') :
+        [];
+      
+      commentBoxes.forEach((box) => {
+        const contentEditable = box.querySelector('div[contenteditable="true"]');
+        if (contentEditable && !contentEditable.hasAttribute('data-ai-button-injected')) {
+          console.log('BuzzBlast: Found comment box via fallback selector');
+          this.injectAIButton(contentEditable);
+        }
+      });
+    }
+
+    // Second fallback: Look for any contenteditable elements that might be comment inputs
+    if (commentInputs.length === 0) {
+      const allContentEditable = element.querySelectorAll ? 
+        element.querySelectorAll('div[contenteditable="true"]') :
+        [];
+      
+      allContentEditable.forEach((editable) => {
+        // Check if this looks like a comment input
+        const placeholder = editable.getAttribute('data-placeholder') || '';
+        const ariaLabel = editable.getAttribute('aria-label') || '';
+        const className = editable.className || '';
+        
+        // Skip if already injected or doesn't look like a comment input
+        if (editable.hasAttribute('data-ai-button-injected')) return;
+        
+        // Check if it's likely a comment input
+        const isLikelyCommentInput = 
+          placeholder.toLowerCase().includes('comment') ||
+          placeholder.toLowerCase().includes('wish') ||
+          placeholder.toLowerCase().includes('reply') ||
+          ariaLabel.toLowerCase().includes('comment') ||
+          ariaLabel.toLowerCase().includes('text editor') ||
+          className.includes('ql-editor') ||
+          editable.closest('.comments-comment-box') ||
+          editable.closest('form');
+        
+        if (isLikelyCommentInput) {
+          console.log('BuzzBlast: Found potential comment input via second fallback:', {
+            placeholder,
+            ariaLabel,
+            className
+          });
+          this.injectAIButton(editable);
+        }
+      });
+    }
   }
 
   injectAIButton(commentInput) {
@@ -119,14 +199,29 @@ class LinkedInCommentHelper {
     });
 
     // Find the best place to insert the buttons
-    const parent = commentInput.parentElement;
-    if (parent) {
+    // Look for the form or comment box container
+    let targetContainer = commentInput.closest('form') || 
+                         commentInput.closest('.comments-comment-box__form') ||
+                         commentInput.closest('.comments-comment-box') ||
+                         commentInput.parentElement;
+    
+    if (targetContainer) {
       // Look for existing button container or create one
-      let buttonContainer = parent.querySelector('.linkedin-ai-button-container');
+      let buttonContainer = targetContainer.querySelector('.linkedin-ai-button-container');
       if (!buttonContainer) {
         buttonContainer = document.createElement('div');
         buttonContainer.className = 'linkedin-ai-button-container';
-        parent.appendChild(buttonContainer);
+        
+        // Try to insert after the text editor container
+        const textEditorContainer = commentInput.closest('.comments-comment-texteditor') || 
+                                   commentInput.closest('.editor-container') ||
+                                   commentInput.parentElement;
+        
+        if (textEditorContainer && textEditorContainer.parentElement) {
+          textEditorContainer.parentElement.insertBefore(buttonContainer, textEditorContainer.nextSibling);
+        } else {
+          targetContainer.appendChild(buttonContainer);
+        }
       }
       
       // Add emotion container first, then AI button
@@ -136,15 +231,19 @@ class LinkedInCommentHelper {
   }
 
   handleEmotionClick(commentInput, emoji, config) {
+    console.log('BuzzBlast: Emotion clicked:', emoji, config.mood);
+    
     // Check if the same mood is already selected
     if (this.selectedMood === config.mood) {
       // Deselect the mood
       this.selectedMood = null;
       this.updateEmotionButtonStates(commentInput, null);
+      console.log('BuzzBlast: Deselected mood');
     } else {
       // Select the new mood
       this.selectedMood = config.mood;
       this.updateEmotionButtonStates(commentInput, emoji);
+      console.log('BuzzBlast: Selected mood:', config.mood);
     }
     
     // Focus the comment input
@@ -152,15 +251,33 @@ class LinkedInCommentHelper {
   }
 
   updateEmotionButtonStates(commentInput, selectedEmoji) {
-    const emotionButtons = commentInput.parentElement?.querySelectorAll('.linkedin-emotion-button');
-    if (emotionButtons) {
+    // Find the button container that contains the emotion buttons
+    let buttonContainer = commentInput.closest('form')?.querySelector('.linkedin-ai-button-container') ||
+                         commentInput.closest('.comments-comment-box__form')?.querySelector('.linkedin-ai-button-container') ||
+                         commentInput.closest('.comments-comment-box')?.querySelector('.linkedin-ai-button-container') ||
+                         commentInput.parentElement?.querySelector('.linkedin-ai-button-container');
+    
+    // Fallback: search in the entire document if not found in parent containers
+    if (!buttonContainer) {
+      buttonContainer = document.querySelector('.linkedin-ai-button-container');
+    }
+    
+    console.log('BuzzBlast: Looking for button container:', !!buttonContainer);
+    
+    if (buttonContainer) {
+      const emotionButtons = buttonContainer.querySelectorAll('.linkedin-emotion-button');
+      console.log('BuzzBlast: Found', emotionButtons.length, 'emotion buttons');
+      
       emotionButtons.forEach(button => {
         if (selectedEmoji && button.innerHTML === selectedEmoji) {
           button.classList.add('selected');
+          console.log('BuzzBlast: Added selected class to button:', selectedEmoji);
         } else {
           button.classList.remove('selected');
         }
       });
+    } else {
+      console.log('BuzzBlast: No button container found');
     }
   }
 
@@ -487,7 +604,20 @@ class LinkedInCommentHelper {
   }
 
   updateButtonState(commentInput, isLoading) {
-    const button = commentInput.parentElement?.querySelector('.linkedin-ai-button');
+    // Find the button container that contains the AI button
+    let buttonContainer = commentInput.closest('form')?.querySelector('.linkedin-ai-button-container') ||
+                         commentInput.closest('.comments-comment-box__form')?.querySelector('.linkedin-ai-button-container') ||
+                         commentInput.closest('.comments-comment-box')?.querySelector('.linkedin-ai-button-container') ||
+                         commentInput.parentElement?.querySelector('.linkedin-ai-button-container');
+    
+    // Fallback: search in the entire document if not found in parent containers
+    if (!buttonContainer) {
+      buttonContainer = document.querySelector('.linkedin-ai-button-container');
+    }
+    
+    const button = buttonContainer?.querySelector('.linkedin-ai-button');
+    console.log('BuzzBlast: Update button state - container found:', !!buttonContainer, 'button found:', !!button, 'loading:', isLoading);
+    
     if (button) {
       if (isLoading) {
         button.innerHTML = `
@@ -501,6 +631,7 @@ class LinkedInCommentHelper {
         `;
         button.classList.add('loading');
         button.disabled = true;
+        console.log('BuzzBlast: Button set to loading state');
       } else {
         button.innerHTML = `
           <div class="sparkle"></div>
@@ -513,7 +644,10 @@ class LinkedInCommentHelper {
         `;
         button.classList.remove('loading');
         button.disabled = false;
+        console.log('BuzzBlast: Button set to normal state');
       }
+    } else {
+      console.log('BuzzBlast: No AI button found to update');
     }
   }
 

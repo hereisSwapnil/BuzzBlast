@@ -309,6 +309,23 @@
 .linkedin-ai-button-container {
   position: relative;
   z-index: 1;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  padding: 4px 0;
+  border-top: 1px solid #e1e5e9;
+}
+
+/* Ensure buttons appear in the right place within LinkedIn's comment structure */
+.comments-comment-box .linkedin-ai-button-container,
+.comments-comment-box__form .linkedin-ai-button-container {
+  order: 1;
+  flex-shrink: 0;
+}
+
+/* Make sure buttons don't get hidden by LinkedIn's overflow */
+.comments-comment-texteditor .linkedin-ai-button-container {
+  position: static;
+  margin-top: 8px;
 }
 
 /* Responsive adjustments */
