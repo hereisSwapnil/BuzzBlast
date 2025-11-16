@@ -11,187 +11,97 @@
   </p>
 </div>
 
-## ✨ Features
+## Features
 
-- 🤖 **AI-Powered Comments**: Generate professional LinkedIn comments using Google's Gemini API
-- 😊 **8 Mood Options**: Choose from 👍👏💡🤔❤️✅🎯🚀 to set the perfect tone
-- 🎯 **Smart Context Analysis**: Analyzes post content and your input for better suggestions
-- 🔒 **Privacy-First**: No data stored - everything processed securely via Gemini API
-- ⚡ **Lightweight**: Minimal impact on LinkedIn page performance
-- 🎨 **Seamless Integration**: Blends naturally with LinkedIn's design
+- AI-powered comment generation using Google's Gemini API
+- 8 mood options to set the tone (👍👏💡🤔❤️✅🎯🚀)
+- Context-aware analysis of post content
+- Privacy-first: no data stored, direct API calls
+- Lightweight and seamlessly integrated with LinkedIn
 
-## 🚀 Quick Start
+## 🎥 Demo
 
-### Option 1: Clone and Build (Recommended)
+<!-- Add your demo video here -->
 
-1. **Clone the repository**:
+*Click the image above to watch the demo video*
+
+## 📸 Screenshots
+
+[![Clean-Shot-2025-11-17-at-03-33-27-2x.png](https://i.postimg.cc/qvbvp5fw/Clean-Shot-2025-11-17-at-03-33-27-2x.png)](https://postimg.cc/ZWNScj5v)
+
+[![Clean-Shot-2025-11-17-at-03-34-51-2x.png](https://i.postimg.cc/gJvpLM75/Clean-Shot-2025-11-17-at-03-34-51-2x.png)](https://postimg.cc/gXkQfKmq)
+
+[![Clean-Shot-2025-11-17-at-03-36-56-2x.png](https://i.postimg.cc/HkfF0wbT/Clean-Shot-2025-11-17-at-03-36-56-2x.png)](https://postimg.cc/Wdw9TJ9y)
+
+## Installation
+
+1. Clone the repository:
    ```bash
    git clone https://github.com/hereisSwapnil/BuzzBlast.git
    cd BuzzBlast
    ```
 
-2. **Install dependencies**:
+2. Install dependencies:
    ```bash
    npm install
    ```
 
-3. **Build the extension**:
+3. Build the extension:
    ```bash
    npm run build
    ```
 
-4. **Load in Chrome**:
-   - Open Chrome and go to `chrome://extensions/`
-   - Enable "Developer Mode" (toggle in top right)
+4. Load in Chrome:
+   - Go to `chrome://extensions/`
+   - Enable "Developer Mode"
    - Click "Load unpacked" and select the `dist/` folder
-   - The extension will appear in your extensions list
 
-5. **Get your API key**:
+5. Get your API key:
    - Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
    - Create a new API key
    - Click the extension icon and paste your key
 
-### Option 2: Download ZIP
+## Usage
 
-1. Download the ZIP file from the [GitHub repository](https://github.com/hereisSwapnil/BuzzBlast)
-2. Extract to a folder
-3. Follow steps 3-5 from Option 1
+1. Navigate to a LinkedIn post
+2. Click "Comment" to open the comment box
+3. Select a mood (👍👏💡🤔❤️✅🎯🚀)
+4. Click the AI button (🤖) that appears
+5. Review, edit if needed, and post
 
-## 🎯 How to Use
+**Tip**: Type your own idea in the comment box before clicking the AI button for more personalized comments.
 
-1. **Navigate to LinkedIn** and find a post to comment on
-2. **Click "Comment"** to open the comment input box
-3. **Select a mood** by clicking one of the emotion buttons (👍👏💡🤔❤️✅🎯🚀)
-4. **Click the AI button** (🤖) that appears next to the emotion buttons
-5. **Review and edit** the generated comment
-6. **Post your comment** when satisfied
-
-**Pro tip**: Type your own idea in the comment box before clicking the AI button for more personalized comments!
-
-### Available Moods
+## Moods
 
 | Mood | Tone | Best For |
 |------|------|----------|
-| 👍 **Like** | Positive & supportive | General engagement |
-| 👏 **Applaud** | Enthusiastic & congratulatory | Celebrations, achievements |
-| 💡 **Insightful** | Thoughtful & analytical | Professional discussions |
-| 🤔 **Curious** | Inquisitive & engaging | Questions, learning |
-| ❤️ **Love** | Warm & appreciative | Personal connections |
-| ✅ **Agree** | Agreeable & confirming | Supporting others' points |
-| 🎯 **Focused** | Professional & goal-oriented | Business discussions |
-| 🚀 **Excited** | Energetic & optimistic | New launches, opportunities |
+| 👍 Like | Positive & supportive | General engagement |
+| 👏 Applaud | Enthusiastic & congratulatory | Celebrations, achievements |
+| 💡 Insightful | Thoughtful & analytical | Professional discussions |
+| 🤔 Curious | Inquisitive & engaging | Questions, learning |
+| ❤️ Love | Warm & appreciative | Personal connections |
+| ✅ Agree | Agreeable & confirming | Supporting others' points |
+| 🎯 Focused | Professional & goal-oriented | Business discussions |
+| 🚀 Excited | Energetic & optimistic | New launches, opportunities |
 
-## 🔧 Development
+## Development
 
 ### Prerequisites
 - Node.js (v16 or higher)
 - Google Chrome browser
 - Gemini API key
 
-### Development Commands
+### Commands
 
 ```bash
-# Install dependencies
-npm install
-
-# Build for production
-npm run build
-
-# Build for development (faster)
-npm run build:dev
-
-# Watch for changes and auto-rebuild
-npm run watch
-
-# Create distributable package
-npm run package
-
-# Validate manifest and files
-npm run validate
+npm install          # Install dependencies
+npm run build        # Build for production
+npm run build:dev    # Build for development
+npm run watch        # Watch for changes
+npm run package      # Create distributable package
+npm run validate     # Validate manifest and files
 ```
 
-### Project Structure
-```
-├── manifest.json          # Extension configuration
-├── content.js            # Main content script
-├── content.css           # Styles for injected elements
-├── popup.html            # Settings popup
-├── popup.js              # Popup functionality
-├── background.js         # Background service worker
-├── icons/                # Extension icons
-│   ├── logo*.png         # Logo files
-│   └── icon*.svg         # SVG source files
-├── scripts/              # Build scripts
-│   ├── generate-icons.js # Icon generation
-│   └── validate-manifest.js # Manifest validation
-├── dist/                 # Built extension (generated)
-└── package.json          # NPM configuration
-```
-
-## 🔒 Privacy & Security
-
-- ✅ **Local Storage**: API keys stored securely in Chrome's storage
-- ✅ **No Data Collection**: No user data collected or transmitted
-- ✅ **Direct API Calls**: All requests go directly to Google's servers
-- ✅ **No Tracking**: No analytics or tracking scripts
-
-## 🛠️ Troubleshooting
-
-### Common Issues
-
-| Problem | Solution |
-|---------|----------|
-| Extension not working | Ensure you're on LinkedIn.com and API key is set |
-| Comments not generating | Check internet connection and API key quota |
-| Button not appearing | Refresh the page or try a different post |
-| API key errors | Verify key is valid in Google AI Studio |
-
-### Getting Help
-
-1. Check that you're on a LinkedIn page (`linkedin.com`)
-2. Verify your API key is correctly set in extension settings
-3. Test your API key in [Google AI Studio](https://makersuite.google.com/app/apikey)
-4. Refresh the LinkedIn page if buttons don't appear
-
-## 📦 Technical Details
-
-- **Manifest Version**: 3 (latest Chrome extension standard)
-- **Permissions**: 
-  - `storage`: Save API key locally
-  - `activeTab`: Interact with LinkedIn pages
-- **Host Permissions**: `https://www.linkedin.com/*`
-- **AI Integration**: Google Gemini Pro API
-
-## 🤝 Contributing
-
-We welcome contributions! Here's how you can help:
-
-1. **Fork** the repository
-2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
-3. **Commit** your changes (`git commit -m 'Add amazing feature'`)
-4. **Push** to the branch (`git push origin feature/amazing-feature`)
-5. **Open** a Pull Request
-
-### Development Guidelines
-
-- Follow existing code style
-- Add comments for complex logic
-- Test your changes thoroughly
-- Update documentation if needed
-
-## 📄 License
+## License
 
 This project is open source and available under the [MIT License](LICENSE).
-
-## 🙏 Acknowledgments
-
-- Built with ❤️ for the LinkedIn community
-- Powered by Google's Gemini AI
-- Icons and design created with care
-
----
-
-<div align="center">
-  <p><strong>Made with ❤️ for better LinkedIn engagement</strong></p>
-  <p>⭐ Star this repo if it helps you!</p>
-</div> 
